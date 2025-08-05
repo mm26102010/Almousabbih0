@@ -1,23 +1,259 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>المسبّح</title>
+  <meta charset="UTF-8">
+  <title>المُسَبِّحُ</title>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
+      font-family: 'Arial', sans-serif;
       text-align: center;
-      font-family: Arial, sans-serif;
+      margin-top: 80px;
+      transition: background-color 0.3s, color 0.3s;
     }
+
     h1 {
-      font-size: 3em;
-      margin-top: 50px;
+      font-size: 48px;
+    }
+
+    #count {
+      font-size: 60px;
+      margin: 30px 0;
+    }
+
+    .phrase-display {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    button {
+      font-size: 24px;
+      padding: 15px 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #increase { background-color: #28a745; color: white; }
+    #reset { background-color: #dc3545; color: white; }
+    #toggle-theme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      font-size: 18px;
+      padding: 8px 14px;
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #toggle-theme:hover { background-color: #5a6268; }
+    #toggle-all { background-color: #007bff; color: white; }
+    #reset-all { background-color: #ff9800; color: white; }
+
+    select {
+      font-size: 20px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .ayah {
+      margin-top: 40px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .palestine {
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    #visitor-count {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #555;
+      transition: color 0.3s;
+    }
+
+    #all-counters {
+      margin-top: 30px;
+      display: none;
+      padding-top: 20px;
+      border-top: 2px dashed #ccc;
+    }
+
+    .counter-line {
+      font-size: 20px;
+      margin: 5px 0;
+    }
+
+    /* الوضع الفاتح */
+    body.light {
+      background-color: #fefaf1;
+      color: #333;
+    }
+
+    /* الوضع الليلي */
+    body.dark {
+      background-color: #2d2d2d;
+      color: #eaeaea;
+    }
+
+    body.dark #visitor-count {
+      color: #ccc;
+    }
+
+    /* الصورة في الزاوية */
+    #corner-image {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      width: 60px;
+      height: auto;
+      z-index: 1001;
+      pointer-events: none;
     }
   </style>
 </head>
-<body>
-  <h1>سبحان الله وبحمده سبحان الله العظيم</h1>
-</body>
-</html>
+<body class="light">
+
+  <img src="your-logo.png" id="corner-image" alt="شعار" />
+
+  <h1>المُسَبِّحُ</h1>
+  <p id="description">تطبيق لكسب الحسنات</p>
+
+  <div id="count">0</div>
+  <div class="phrase-display" id="phrase">سبحان الله</div>
+
+  <button id="increase" onclick="increaseCount()">زيادة</button>
+  <button id="reset" onclick="resetCount()">إعادة ضبط</button>
+  <button id="toggle-all" onclick="toggleAll()">عرض/إخفاء جميع العدادات</button>
+  <button id="reset-all" onclick="resetAll()" style="display: none;">إعادة ضبط الكل</button>
+  <button id="toggle-theme" onclick="toggleTheme()">🌙</button>
+
+  <br>
+
+  <label for="phrase-select"><strong>اختر العبارة:</strong></label><br>
+  <select id="phrase-select" onchange="changePhrase()">
+    <option value="0">سبحان الله</option>
+    <option value="1">الحمد لله</option>
+    <option value="2">الله أكبر</option>
+    <option value="3">لا إله إلا الله</option>
+    <option value="4">استغفر الله</option>
+    <option value="5">لا حول ولا قوة إلا بالله</option>
+  </select>
+
+  <div class="ayah">﴿ أَلَا بِذِكْرِ ٱللَّهِ تَطْمَئِنُّ ٱلْقُلُوبُ ﴾</div>
+  <div class="palestine">لا تنسوا الدعاء لإخواننا في فلسطين</div>
+
+  <div id="visitor-count">عدد المسبحين الآن: <span id="visitor-number">0</span></div>
+
+  <div id="all-counters">
+    <h3>جميع العدادات:</h3>
+    <div class="counter-line" id="line-0">سبحان الله: 0</div>
+    <div class="counter-line" id="line-1">الحمد لله: 0</div>
+    <div class="counter-line" id="line-2">الله أكبر: 0</div>
+    <div class="counter-line" id="line-3">لا إله إلا الله: 0</div>
+    <div class="counter-line" id="line-4">استغفر الله: 0</div>
+    <div class="counter-line" id="line-5">لا حول ولا قوة إلا بالله: 0</div>
+  </div>
+
+  <script>
+    const phrases = [
+      "سبحان الله",
+      "الحمد لله",
+      "الله أكبر",
+      "لا إله إلا الله",
+      "استغفر الله",
+      "لا حول ولا قوة إلا بالله"
+    ];
+
+    let phraseIndex = parseInt(localStorage.getItem('phraseIndex')) || 0;
+    let counters = JSON.parse(localStorage.getItem('counters')) || [0, 0, 0, 0, 0, 0];
+
+    const countEl = document.getElementById('count');
+    const phraseEl = document.getElementById('phrase');
+    const selectEl = document.getElementById('phrase-select');
+
+    function updateUI() {
+      countEl.textContent = counters[phraseIndex];
+      phraseEl.textContent = phrases[phraseIndex];
+
+      for (let i = 0; i < phrases.length; i++) {
+        document.getElementById('line-' + i).textContent = `${phrases[i]}: ${counters[i]}`;
+      }
+    }
+
+    function increaseCount() {
+      counters[phraseIndex]++;
+      localStorage.setItem('counters', JSON.stringify(counters));
+      updateUI();
+    }
+
+    function resetCount() {
+      counters[phraseIndex] = 0;
+      localStorage.setItem('counters', JSON.stringify(counters));
+      updateUI();
+    }
+
+    function changePhrase() {
+      phraseIndex = parseInt(selectEl.value);
+      localStorage.setItem('phraseIndex', phraseIndex);
+      updateUI();
+    }
+
+    function toggleAll() {
+      const section = document.getElementById('all-counters');
+      const resetAllBtn = document.getElementById('reset-all');
+
+      if (section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+        resetAllBtn.style.display = 'inline-block';
+      } else {
+        section.style.display = 'none';
+        resetAllBtn.style.display = 'none';
+      }
+    }
+
+    function resetAll() {
+      counters = [0, 0, 0, 0, 0, 0];
+      localStorage.setItem('counters', JSON.stringify(counters));
+      updateUI();
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const isDark = body.classList.contains('dark');
+      body.className = isDark ? 'light' : 'dark';
+      localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+
+    // عداد الزوار (محلي)
+    let visitors = parseInt(localStorage.getItem('visitors')) || 0;
+    visitors++;
+    localStorage.setItem('visitors', visitors);
+    document.getElementById('visitor-number').textContent = visitors;
+
+    // تحميل الإعدادات
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.className = 'dark';
+    }
+
+    selectEl.value = phraseIndex;
+    updateUI();
+  </script>
+
+</
