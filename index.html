@@ -1,15 +1,4 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>تطبيق تسبيح!</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-      <h1 class="title"> </h1>
-      <p id=تطبيق لكسب الحسنات></p>
-      <script src="script.js"></script>
-  </body>
-</html><!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -127,21 +116,25 @@
       color: #ccc;
     }
 
-    /* الصورة في الزاوية العلوية اليمنى */
+    /* الصورة في الزاوية */
     #corner-image {
       position: fixed;
       top: 10px;
-      left: 10px; /* بسبب dir="rtl" هذه هي الزاوية اليمنى */
+      left: 10px;
       width: 60px;
       height: auto;
-      z-index: 1001; /* أعلى من زر تبديل الوضع */
-      pointer-events: none; /* لتجنب منع النقر على العناصر تحتها */
+      z-index: 1001;
+      pointer-events: none;
     }
   </style>
 </head>
 <body class="light">
 
+  <img src="your-logo.png" id="corner-image" alt="شعار" />
+
   <h1>المُسَبِّحُ</h1>
+  <p id="description">تطبيق لكسب الحسنات</p>
+
   <div id="count">0</div>
   <div class="phrase-display" id="phrase">سبحان الله</div>
 
@@ -263,5 +256,4 @@
     updateUI();
   </script>
 
-</body>
-</html>
+</
